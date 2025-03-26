@@ -2,6 +2,7 @@
 import settings from "./settings.js";
 import * as core from '@actions/core';
 import { GSheet, sheets_v4 } from './lib/google/sheet.js';
+import { fileURLToPath } from 'url';
 
 /**
  * latestシートの内容をクリアする関数
@@ -51,7 +52,8 @@ export async function clearLatestSheet() {
   }
 }
 
-if (require.main === module) {
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   clearLatestSheet().catch(e => {
     console.error(e);
     core.setFailed(`Action failed with error ${e}`);
