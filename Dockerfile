@@ -16,4 +16,4 @@ ENV NODE_ENV=production
 COPY package.json yarn.lock ./
 COPY --from=node_modules /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
-CMD ["/app/dist/monthly.js"]
+CMD ["/app/dist/entrypoint.js"]
