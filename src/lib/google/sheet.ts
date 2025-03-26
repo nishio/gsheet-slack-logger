@@ -127,4 +127,49 @@ export class GSheet {
       {},
     );
   }
+
+  async copyFile(newName: string): Promise<GSheet> {
+    const res = await drive.files.copy({
+      fileId: this.id,
+      requestBody: {
+        name: newName,
+      },
+    }).catch((e) => {
+      throw new ObjError("copy fail", e);
+    });
+
+    const newId = res.data.id;
+    if (!newId) {
+      throw new ObjError("Copy Sheet", res);
+    }
+    return new GSheet(newId);
+  }
+
+  static async getLatestFile(): Promise<GSheet | null> {
+    try {
+      const res = await drive.files.list({
+        q: "name='latest' and mimeType='application/vnd.google-apps.spreadsheet'",
+        fields: 'files(id, name)',
+      });
+
+      if (res.data.files && res.data.files.length > 0) {
+        return new GSheet(res.data.files[0].id!);
+      }
+      return null;
+    } catch (e) {
+      console.error("Failed to get latest file", e);
+      return null;
+    }
+  }
+
+  async renameFile(newName: string): Promise<void> {
+    await drive.files.update({
+      fileId: this.id,
+      requestBody: {
+        name: newName,
+      },
+    }).catch((e) => {
+      throw new ObjError("rename fail", e);
+    });
+  }
 }
