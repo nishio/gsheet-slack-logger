@@ -30,6 +30,18 @@ inputs:
   skipChannels:
     required: false
     description: Array of channel id which should skip
+  useLatestFile:
+    required: false
+    description: Use name 'latest' for the file and keep its ID unchanged
+    default: false
+  backupWithDate:
+    required: false
+    description: Create a backup with the execution date name
+    default: false
+  lastDays:
+    required: false
+    description: Number of days to fetch from the trigger date (30 days by default)
+    default: '30'
 runs:
   using: 'docker'
   image: 'Dockerfile'
