@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+import { loadEnv } from './localEnv.js';
+loadEnv(); // 環境変数を読み込む
+
 import settings from "./settings.js";
-import * as core from '@actions/core';
+import core from './lib/coreWrapper.js';
 import { GSheet, sheets_v4 } from './lib/google/sheet.js';
 import { fileURLToPath } from 'url';
 
@@ -54,7 +57,11 @@ export async function clearLatestSheet() {
 
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
 if (isMainModule) {
-  clearLatestSheet().catch(e => {
+  clearLatestSheet().then(latestSheet => {
+    if (latestSheet) {
+      console.log(`Successfully cleared latest sheet: ${latestSheet.url()}`);
+    }
+  }).catch(e => {
     console.error(e);
     core.setFailed(`Action failed with error ${e}`);
   });

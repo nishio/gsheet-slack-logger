@@ -153,3 +153,38 @@ jobs:
           backupWithDate: true
           lastDays: 30
 ```
+
+# ローカル環境での実行方法
+
+GitHub Actionsの他に、ローカル環境での実行もサポートしています。
+
+## 準備
+
+1. リポジトリをクローン
+```
+git clone https://github.com/nishio/gsheet-slack-logger.git
+cd gsheet-slack-logger
+```
+
+2. 依存パッケージのインストール
+```
+npm install
+yarn install
+```
+
+3. ビルド
+```
+yarn build
+```
+
+4. 環境変数の設定
+`.env.example`ファイルをコピーして`.env`ファイルを作成し、必要な情報を入力してください。
+```
+cp .env.example .env
+```
+
+## 実行コマンド
+
+- 月次バックアップの実行: `yarn start:monthly`
+- 最新のログ取得: `yarn start:latest`
+- latestシートのクリア: `yarn clear:latest`
