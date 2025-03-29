@@ -1,6 +1,10 @@
+#!/usr/bin/env node
+import { loadEnv } from './localEnv.js';
+loadEnv(); // 環境変数を読み込む
+
 import main from './main.js'
 import settings from './settings.js';
-import * as core from '@actions/core';
+import core from './lib/coreWrapper.js';
 
 import { Temporal } from '@js-temporal/polyfill';
 
