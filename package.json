@@ -9,7 +9,14 @@
   "private": true,
   "scripts": {
     "build": "yarn tsc",
-    "run": "node dist/main.js"
+    "run": "node dist/main.js",
+    "start:monthly": "node dist/monthly.js",
+    "start:latest": "node dist/latest.js",
+    "clear:latest": "node dist/clearLatestSheet.js",
+    "export:csv": "node dist/exportToCsv.js",
+    "export:csv:s3": "node dist/exportToCsv.js --upload=s3",
+    "export:csv:github": "node dist/exportToCsv.js --upload=github",
+    "export:csv:gcs": "node dist/exportToCsv.js --upload=gcs"
   },
   "devDependencies": {
     "@types/node": "^16.4.12",
@@ -19,8 +26,10 @@
     "@actions/core": "^1.6.0",
     "@js-temporal/polyfill": "^0.3.0",
     "@slack/web-api": "^6.3.0",
+    "csv-writer": "^1.6.0",
     "date-fns": "^2.23.0",
     "date-fns-tz": "^1.1.4",
+    "dotenv": "^16.4.7",
     "googleapis": "^85.0.0"
   }
 }
