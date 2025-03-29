@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-import { loadEnv } from './localEnv';
+import { loadEnv } from './localEnv.js';
 loadEnv(); // 環境変数を読み込む
 
-import settings from './settings';
-import core from './lib/coreWrapper';
-import { StatusFile } from './lib/statusFile';
-import { historyIt, MessageProcessor } from './lib/slack';
-import { Timestamp } from './lib/timestamp';
-import { exportChannelToCsv, exportAllChannelsToCsv } from './lib/csv/exporter';
-import { uploadCsvFiles, UploadOptions } from './lib/csv/uploader';
+import settings from './settings.js';
+import core from './lib/coreWrapper.js';
+import { StatusFile } from './lib/statusFile.js';
+import { historyIt, MessageProcessor } from './lib/slack.js';
+import { Timestamp } from './lib/timestamp.js';
+import { exportChannelToCsv, exportAllChannelsToCsv } from './lib/csv/exporter.js';
+import { uploadCsvFiles, UploadOptions } from './lib/csv/uploader.js';
 import { Temporal } from '@js-temporal/polyfill';
 import { Message } from '@slack/web-api/dist/response/ConversationsHistoryResponse';
 
@@ -27,7 +27,7 @@ async function main() {
     const uploadOption = args.find(arg => arg.startsWith('--upload='))?.split('=')[1] || 'local';
     const includeRaw = args.includes('--include-raw');
     
-    const timeZone = settings.tz;
+    const timeZone = settings.tz || 'UTC';
     const year = parseInt(core.getInput('year'));
     const month = parseInt(core.getInput('month'));
     
