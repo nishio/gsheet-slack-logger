@@ -193,19 +193,43 @@ cp .env.example .env
 
 Node.js v14以降を使用している場合、Google認証でOpenSSLエラー（`error:1E08010C:DECODER routines::unsupported`）が発生することがあります。これは、新しいNode.jsバージョンとOpenSSL 3.0+の組み合わせで秘密鍵の形式に互換性の問題があるためです。
 
-解決方法：
+### 解決方法
 
-1. 環境変数`NODE_OPTIONS=--openssl-legacy-provider`を設定する（Node.js v18以降で有効）
-   ```
-   # .envファイルに追加
-   NODE_OPTIONS=--openssl-legacy-provider
-   ```
+1. **Node.jsバージョンを変更する**
+   - Node.js v12など、より古いバージョンを使用する
+   - nvmがインストールされている場合：
+     ```
+     nvm install 12
+     nvm use 12
+     ```
 
-2. 秘密鍵の形式が正しいことを確認する
-   - 秘密鍵は以下の形式である必要があります：
+2. **環境変数を設定する**
+   - Node.js v18以降の場合、OpenSSLレガシープロバイダーを有効にする：
+     ```
+     # .envファイルに追加
+     NODE_OPTIONS=--openssl-legacy-provider
+     ```
+   - または、コマンド実行時に直接指定：
+     ```
+     NODE_OPTIONS=--openssl-legacy-provider yarn clear:latest
+     ```
+
+3. **秘密鍵の形式を修正する**
+   - 秘密鍵は正確に以下の形式である必要があります：
      ```
      -----BEGIN PRIVATE KEY-----\nキーの内容（Base64）\n-----END PRIVATE KEY-----
      ```
-   - Google Cloud Consoleから新しいサービスアカウントキーをJSON形式でダウンロードし、正確に形式を変換してください。
+   - Google Cloud Consoleから新しいサービスアカウントキーをJSON形式でダウンロードし、正確に形式を変換する
+   - JSONファイルから秘密鍵を抽出する際、改行を`\n`に置き換え、余分な引用符を削除する
 
-注意：GitHub Actionsでは、kuboon/gsheet-slack-logger@mainアクションが使用され、これはDenoで実装されているため、この問題は発生しません。
+4. **Google認証ライブラリのバージョンを変更する**
+   - 互換性のあるバージョンのgoogle-auth-libraryを使用する：
+     ```
+     npm install google-auth-library@6.1.6
+     ```
+
+### 注意事項
+
+- GitHub Actionsでは、kuboon/gsheet-slack-logger@mainアクションが使用され、これはDenoで実装されているため、この問題は発生しません。
+- ローカル環境での実行時のみ、この互換性の問題に対処する必要があります。
+- 最も確実な方法は、Node.js v12を使用することです。
