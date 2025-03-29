@@ -188,3 +188,24 @@ cp .env.example .env
 - 月次バックアップの実行: `yarn start:monthly`
 - 最新のログ取得: `yarn start:latest`
 - latestシートのクリア: `yarn clear:latest`
+
+## Node.js互換性の注意点
+
+Node.js v14以降を使用している場合、Google認証でOpenSSLエラー（`error:1E08010C:DECODER routines::unsupported`）が発生することがあります。これは、新しいNode.jsバージョンとOpenSSL 3.0+の組み合わせで秘密鍵の形式に互換性の問題があるためです。
+
+解決方法：
+
+1. 環境変数`NODE_OPTIONS=--openssl-legacy-provider`を設定する（Node.js v18以降で有効）
+   ```
+   # .envファイルに追加
+   NODE_OPTIONS=--openssl-legacy-provider
+   ```
+
+2. 秘密鍵の形式が正しいことを確認する
+   - 秘密鍵は以下の形式である必要があります：
+     ```
+     -----BEGIN PRIVATE KEY-----\nキーの内容（Base64）\n-----END PRIVATE KEY-----
+     ```
+   - Google Cloud Consoleから新しいサービスアカウントキーをJSON形式でダウンロードし、正確に形式を変換してください。
+
+注意：GitHub Actionsでは、kuboon/gsheet-slack-logger@mainアクションが使用され、これはDenoで実装されているため、この問題は発生しません。
