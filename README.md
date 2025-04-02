@@ -7,6 +7,7 @@ slack の過去ログを google sheet に書き出すツールです。
 - 過去ログのアクセス権を絞れるので非公開 slack でも便利
 - github actions で実行可能、サーバー不要
 - 公開リポジトリでセットアップ可能、トークン等の非公開情報は repository secrets に設定
+- TypeScript版とPython版の両方を提供（Python版は`scripts/python`ディレクトリを参照）
 
 デフォルトでは、実行日時の2か月前からの1か月分、すべての公開チャンネルを1ファイルにします。
 
