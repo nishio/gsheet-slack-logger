@@ -7,6 +7,7 @@ slack の過去ログを google sheet に書き出すツールです。
 - 過去ログのアクセス権を絞れるので非公開 slack でも便利
 - github actions で実行可能、サーバー不要
 - 公開リポジトリでセットアップ可能、トークン等の非公開情報は repository secrets に設定
+- TypeScript版とPython版の両方を提供（Python版は`scripts/python`ディレクトリを参照）
 
 デフォルトでは、実行日時の2か月前からの1か月分、すべての公開チャンネルを1ファイルにします。
 
@@ -107,3 +108,49 @@ false にした場合、作成した slack app が既に参加しているチャ
 ## skipChannels
 autoJoin: true の場合、 bot を kick しても次の実行時に自動的に join してしまいます。
 skipChannels に channel id を列挙することで、これらのチャンネルをログ取得の対象外とすることができます。
+
+## 過去30日間のログ取得と"latest"ファイル機能
+
+以下のオプションを使用することで、トリガー日時から過去30日間のログを取得し、"latest"という名前のファイルにログを保存することができます。
+
+```
+        with:
+          useLatestFile: true
+          backupWithDate: true
+          lastDays: 30
+```
+
+### useLatestFile
+このオプションを有効にすると、"latest"という名前のGoogle Sheetファイルを作成・更新します。ファイルIDは変わらず、内容だけが更新されるため、共有設定やリンクが維持されます。
+
+### backupWithDate
+このオプションを有効にすると、実行日時の名前でバックアップファイルも作成されます。"latest"ファイルが存在する場合は、そのコピーが作成されます。
+
+### lastDays
+トリガー日時から何日前までのデータを取得するかを指定します。デフォルトは30日です。
+
+例として、以下のようなワークフローを作成することができます。
+
+```yml
+# .github/workflows/slack-backup-latest.yml
+name: slack-backup-latest
+
+on:
+  schedule:
+    - cron:  '11 0 * * *' # 毎日 日本時間9時11分に実行
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kuboon/gsheet-slack-logger@main
+        with:
+          timezone: 'Asia/Tokyo'
+          slackToken: ${{ secrets.SLACK_TOKEN }}
+          googleClientEmail: xxxx@xxxx.iam.gserviceaccount.com
+          googlePrivateKey: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          folderId: 1p0ZSVps76fWoLpfnE9y5tYHkCK18yVeW
+          useLatestFile: true
+          backupWithDate: true
+          lastDays: 30
+```

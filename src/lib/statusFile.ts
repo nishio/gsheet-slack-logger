@@ -80,6 +80,19 @@ async function prepareWorkSheet(sid: string | null, fName: string) {
   if (sid) {
     return new GSheet(sid)
   } else {
-    return GSheet.create(fName, GSheetSchema.sheetNames(settings.tz, ['_']), settings.folder)
+    if (settings.useLatestFile) {
+      const latestSheet = await GSheet.getLatestFile();
+      if (latestSheet) {
+        if (settings.backupWithDate) {
+          await latestSheet.copyFile(fName);
+        }
+        return latestSheet;
+      }
+      const sheet = await GSheet.create(fName, GSheetSchema.sheetNames(settings.tz, ['_']), settings.folder);
+      await sheet.renameFile('latest');
+      return sheet;
+    } else {
+      return GSheet.create(fName, GSheetSchema.sheetNames(settings.tz, ['_']), settings.folder)
+    }
   }
 }
