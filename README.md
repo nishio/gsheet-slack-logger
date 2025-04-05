@@ -1,3 +1,5 @@
+deprecated: see oss_weekly_reporter
+
 # Google sheets slack logger
 slack の過去ログを google sheet に書き出すツールです。
 無料版の slack では古いメッセージは順次閲覧不能になりますが、このツールでログを取っておけば、 google sheet 上で閲覧、検索が出来ます。
