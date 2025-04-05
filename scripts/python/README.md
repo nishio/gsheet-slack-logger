@@ -1,5 +1,7 @@
 # Python版 Slack Logger
 
+deprecated: see oss_weekly_reporter
+
 このディレクトリには、Slackの過去ログを取得してGoogle Spreadsheetに保存するPythonスクリプトが含まれています。
 
 ## 機能
